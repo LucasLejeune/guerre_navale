@@ -57,12 +57,6 @@ public class Plateau {
                     + nbSousMarinsDispos + ", représenté par: '@') ");
             String navire = System.console().readLine();
 
-            if (!navire.equals("1")) {
-                System.out.println(
-                        "Dans quelle direction l'orienter ? (G pour gauche, D pour droite, H pour haut ou B pour bas)");
-                String direction = System.console().readLine();
-
-            }
             int verif = i;
             for (String j : tab) {
                 if (j.equals(ligne)) {
@@ -82,6 +76,37 @@ public class Plateau {
                 }
             }
 
+            if (!navire.equals("1") && i == verif) {
+                System.out.println(
+                        "Dans quelle direction l'orienter ? (G pour gauche, D pour droite, H pour haut ou B pour bas)");
+                String direction = System.console().readLine();
+                if (direction.equals("D") || direction.equals("G") || direction.equals("H") || direction.equals("B")) {
+                    int x = Integer.parseInt(ligne.substring(0, 1));
+                    int y = Integer.parseInt(ligne.substring(2, 3));
+
+                    if (direction.equals("D")) { // faire une méthode avec un tableau associatif.
+                        if (navire.equals("2")) {
+                            if (!estDispo(x, y) || !estDispo(x, y + 1)) {
+                                verif--;
+                            } else {
+                                ligne += " 2 D";
+                            }
+                        } else if (navire.equals("3")) {
+
+                        } else {
+
+                        }
+
+                    }
+                } else {
+                    System.out.println("Erreur lors de l'entrée de la direction, réesayer");
+                    verif--;
+                }
+
+            } else {
+                ligne += " 1";
+            }
+
             if (i == verif) {
                 i++;
                 tab.add(ligne);
@@ -89,14 +114,32 @@ public class Plateau {
 
         }
         for (String k : tab) {
+
             ligne = Integer.parseInt(k.substring(0, 1));
             colonne = Integer.parseInt(k.substring(2, 3));
-            grille[ligne][colonne] = "@";
+            if (k.length() == 5) {
+
+                grille[ligne][colonne] = "@";
+            } else {
+                int type = Integer.parseInt(k.substring(4, 5));
+                String direction = k.substring(7, 8);
+
+                grille[ligne][colonne] = "@";
+            }
         }
     }
 
     public String[][] getGrille() {
         return grille;
+    }
+
+    public boolean estDispo(int ligne, int colonne) {
+        if (grille[ligne][colonne].equals("X")) {
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
     public void tir(int numJoueur) {
