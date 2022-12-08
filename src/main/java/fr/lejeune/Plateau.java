@@ -6,10 +6,11 @@ public class Plateau {
     private int ligne;
     private int colonne;
     private int nbNavireUp = 5;
-    private int nbPorteAvionDispo = 1; // 4 case (/)
-    private int nbCroiseursDispo = 2; // 3 cases (#)
-    private int nbTorpilleursDispo = 3; // 2 cases (!)
-    private int nbSousMarinsDispos = 4; // 1 case (@)
+    private int nbPorteAvionDispo = 1; // 4 cases
+    private int nbCroiseursDispo = 2; // 3 cases
+    private int nbTorpilleursDispo = 3; // 2 cases
+    private int nbSousMarinsDispos = 4; // 1 case
+    private String[] reserveCos = { "", "", "", "", "" };
 
     private String[][] grille;
 
@@ -48,13 +49,16 @@ public class Plateau {
                         + max + " et C la colonne entre 0 et " + max + ").");
         int i = 1;
         while (i < 6) {
+            int taille;
+            String representation;
+            Navire bateau = null;
             System.out.println("Entrez les coordonnées du navire " + i + ":");
             String ligne = System.console().readLine();
-            System.out.println("Selectionner le type de navire souhaité:\n1: Porte-avion (taille: 4, disponible(s):"
-                    + nbPorteAvionDispo + ", représenté par: '/')\n2: Croiseur (taille: 3, disponible(s): "
-                    + nbCroiseursDispo + ", représenté par: '#')\n3: Torpilleur (taille: 2, disponible(s): "
-                    + nbTorpilleursDispo + ", représenté par: '!')\n4: Sous-marin (taille: 1, disponible(s): "
-                    + nbSousMarinsDispos + ", représenté par: '@') ");
+            System.out.println("Selectionner le type de navire souhaité:\n1: Sous-marin (taille: 1, disponible(s): "
+                    + nbSousMarinsDispos + ") \n2: Torpilleur (taille: 2, disponible(s): "
+                    + nbTorpilleursDispo + ")\n3: Croiseur (taille: 3, disponible(s): "
+                    + nbCroiseursDispo + ")\n4: Porte-avion (taille: 4, disponible(s):"
+                    + nbPorteAvionDispo + ")");
             String navire = System.console().readLine();
 
             int verif = i;
@@ -84,61 +88,186 @@ public class Plateau {
                     int x = Integer.parseInt(ligne.substring(0, 1));
                     int y = Integer.parseInt(ligne.substring(2, 3));
 
-                    if (direction.equals("D")) { // faire une méthode avec un tableau associatif.
+                    if (direction.equals("D")) {
                         if (navire.equals("2")) {
-                            if (!estDispo(x, y) || !estDispo(x, y + 1)) {
+                            if (!estDispo(x, y, i) || !estDispo(x, y + 1, i)) {
+                                System.out.println("Espace indisponible");
                                 verif--;
                             } else {
-                                ligne += " 2 D";
+                                nbTorpilleursDispo--;
                             }
+
                         } else if (navire.equals("3")) {
+                            if (!estDispo(x, y, i) || !estDispo(x, y + 1, i) || !estDispo(x, y + 2, i)) {
+                                System.out.println("Espace indisponible");
+                                verif--;
+                            } else {
+                                nbCroiseursDispo--;
+                            }
 
                         } else {
+                            if (!estDispo(x, y, i) || !estDispo(x, y + 1, i) || !estDispo(x, y + 2, i)
+                                    || !estDispo(x, y + 3, i)) {
+                                System.out.println("Espace indisponible");
+                                verif--;
+                            } else {
+                                nbPorteAvionDispo--;
+                            }
+                        }
+
+                    } else if (direction.equals("G")) {
+                        if (navire.equals("2")) {
+                            if (!estDispo(x, y, i) || !estDispo(x, y - 1, i)) {
+                                System.out.println("Espace indisponible");
+                                verif--;
+                            } else {
+                                nbTorpilleursDispo--;
+                            }
+
+                        } else if (navire.equals("3")) {
+                            if (!estDispo(x, y, i) || !estDispo(x, y - 1, i) || !estDispo(x, y - 2, i)) {
+                                System.out.println("Espace indisponible");
+                                verif--;
+                            } else {
+                                nbCroiseursDispo--;
+                            }
+
+                        } else {
+                            if (!estDispo(x, y, i) || !estDispo(x, y - 1, i) || !estDispo(x, y - 2, i)
+                                    || !estDispo(x, y - 3, i)) {
+                                System.out.println("Espace indisponible");
+                                verif--;
+                            } else {
+                                nbPorteAvionDispo--;
+                            }
 
                         }
 
+                    } else if (direction.equals("H")) {
+                        if (navire.equals("2")) {
+                            if (!estDispo(x, y, i) || !estDispo(x - 1, y, i)) {
+                                System.out.println("Espace indisponible");
+                                verif--;
+                            } else {
+                                nbTorpilleursDispo--;
+                            }
+
+                        } else if (navire.equals("3")) {
+                            if (!estDispo(x, y, i) || !estDispo(x - 1, y, i) || !estDispo(x - 2, y, i)) {
+                                System.out.println("Espace indisponible");
+                                verif--;
+                            } else {
+                                nbCroiseursDispo--;
+                            }
+
+                        } else {
+                            if (!estDispo(x, y, i) || !estDispo(x - 1, y, i) || !estDispo(x - 2, y, i)
+                                    || !estDispo(x - 3, y, i)) {
+                                System.out.println("Espace indisponible");
+                                verif--;
+                            } else {
+                                nbPorteAvionDispo--;
+                            }
+                        }
+                    } else {
+                        if (navire.equals("2")) {
+                            if (!estDispo(x, y, i) || !estDispo(x + 1, y, i)) {
+                                System.out.println("Espace indisponible");
+                                verif--;
+                            } else {
+                                nbTorpilleursDispo--;
+                            }
+                        } else if (navire.equals("3")) {
+                            if (!estDispo(x, y, i) || !estDispo(x + 1, y, i) || !estDispo(x + 2, y, i)) {
+                                System.out.println("Espace indisponible");
+                                verif--;
+                            } else {
+                                nbCroiseursDispo--;
+                            }
+                        } else {
+                            if (!estDispo(x, y, i) || !estDispo(x + 1, y, i) || !estDispo(x + 2, y, i)
+                                    || !estDispo(x + 3, y, i)) {
+                                System.out.println("Espace indisponible");
+                                verif--;
+                            } else {
+                                nbPorteAvionDispo--;
+                            }
+                        }
                     }
+
+                    if (navire.equals("2")) {
+                        representation = "!";
+                    } else if (navire.equals("3")) {
+                        representation = "#";
+                    } else {
+                        representation = "/";
+                    }
+                    bateau = new Navire(Integer.parseInt(navire), representation, Integer.parseInt(navire), ligne,
+                            direction);
                 } else {
                     System.out.println("Erreur lors de l'entrée de la direction, réesayer");
                     verif--;
                 }
 
             } else {
-                ligne += " 1";
+                bateau = new Navire(Integer.parseInt(navire), "@", Integer.parseInt(navire), ligne,
+                        "D");
             }
 
             if (i == verif) {
                 i++;
-                tab.add(ligne);
+                for (String cos : bateau.getCoordonnees()) {
+                    grille[Integer.parseInt(cos.substring(0, 1))][Integer
+                            .parseInt(cos.substring(2, 3))] = bateau.getRepresentation();
+                }
             }
 
         }
-        for (String k : tab) {
+        // for (String k : tab) {
 
-            ligne = Integer.parseInt(k.substring(0, 1));
-            colonne = Integer.parseInt(k.substring(2, 3));
-            if (k.length() == 5) {
+        // ligne = Integer.parseInt(k.substring(0, 1));
+        // colonne = Integer.parseInt(k.substring(2, 3));
+        // if (k.length() == 5) {
+        // grille[ligne][colonne] = "@";
+        // } else {
+        // int type = Integer.parseInt(k.substring(4, 5));
+        // String direction = k.substring(6, 7);
+        // for (int l = 0; l < type; l++) {
+        // if (direction.equals("D")) {
+        // grille[ligne][colonne + l] = "@";
+        // } else if (direction.equals("G")) {
+        // grille[ligne][colonne - l] = "@";
+        // } else if (direction.equals("H")) {
+        // grille[ligne - l][colonne] = "@";
+        // } else {
+        // grille[ligne + l][colonne] = "@";
+        // }
 
-                grille[ligne][colonne] = "@";
-            } else {
-                int type = Integer.parseInt(k.substring(4, 5));
-                String direction = k.substring(7, 8);
+        // }
 
-                grille[ligne][colonne] = "@";
-            }
-        }
+        // grille[ligne][colonne] = "@";
+        // }
+        // }
     }
 
     public String[][] getGrille() {
         return grille;
     }
 
-    public boolean estDispo(int ligne, int colonne) {
-        if (grille[ligne][colonne].equals("X")) {
-            return false;
-        } else {
+    public boolean estDispo(int ligne, int colonne, int numTour) {
+        numTour--;
+        if (ligne >= 0 && colonne >= 0) {
+            if (reserveCos[0] != "") {
+                for (String res : reserveCos) {
+                    if (res.equals(ligne + " " + colonne)) {
+                        return false;
+                    }
+                }
+            }
+            reserveCos[numTour] = ligne + " " + colonne;
             return true;
         }
+        return false;
 
     }
 

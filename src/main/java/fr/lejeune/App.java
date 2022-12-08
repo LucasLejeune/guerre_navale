@@ -6,7 +6,7 @@ public class App {
         System.out.println("Bienvenue dans la guerre marine !");
         Boolean isEnd = false;
 
-        Plateau j1 = new Plateau(1, 8);
+        Plateau j1 = new Plateau(1, 10); // max 10
         j1.affichageGrille();
 
         System.out.println("Appuyer sur entrée pour passer au joueur suivant");
@@ -16,7 +16,7 @@ public class App {
             System.out.println("\n");
         }
 
-        Plateau j2 = new Plateau(2, 8);
+        Plateau j2 = new Plateau(2, 10);
         j2.affichageGrille();
 
         System.out.println("Appuyer sur entrée pour commencer la partie");
